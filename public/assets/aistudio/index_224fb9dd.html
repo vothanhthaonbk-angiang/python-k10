@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Python Code Lab 10</title>
+<style>
+:root{--navy:#10213d;--blue:#2457d6;--gold:#ffbd45;--bg:#f3f6fb;--ink:#17233b;--muted:#667085}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,Segoe UI,Arial,sans-serif;color:var(--ink)}header{background:linear-gradient(120deg,#10213d,#244b8f);color:white;padding:25px 18px}header .wrap,main{max-width:1080px;margin:auto}.eyebrow{font-size:.78rem;font-weight:700;color:#ffd477;letter-spacing:.08em}h1{font-size:clamp(1.6rem,4vw,2.4rem);margin:.4rem 0}header p{color:#e2eaff;margin:.3rem 0}
+main{padding:20px 15px 40px}.layout{display:grid;grid-template-columns:280px 1fr;gap:16px}.panel{background:white;border:1px solid #e1e7f0;border-radius:16px;padding:18px;box-shadow:0 8px 24px #1c31540b}h2{font-size:1.2rem;margin:.1rem 0 .8rem}.task{display:block;text-align:left;width:100%;padding:12px;border:1px solid #e0e6ef;border-radius:10px;background:white;margin:8px 0;cursor:pointer;color:var(--ink)}.task.active{border-color:var(--blue);background:#edf3ff}.muted{color:var(--muted);font-size:.9rem;line-height:1.55}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f6f8fc;border-radius:10px;padding:12px;font-size:.95rem}.editor{width:100%;min-height:210px;resize:vertical;background:#101827;color:#e9f0ff;border:1px solid #334155;border-radius:12px;padding:14px;font:14px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:4}
+button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 15px;cursor:pointer}.primary{background:var(--blue);color:white}.secondary{background:#edf1f7;color:#25344f}.controls{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.output{background:#101827;color:#dce8ff;min-height:70px;border-radius:10px;padding:13px;white-space:pre-wrap;font:14px/1.55 ui-monospace,Consolas,monospace}.notice{background:#fff7e5;color:#78510a;border-radius:10px;padding:12px;font-size:.9rem;line-height:1.5}.hidden{display:none}.tag{display:inline-block;background:#edf3ff;color:#2457d6;border-radius:20px;padding:4px 9px;font-size:.8rem;font-weight:700}
+@media(max-width:760px){.layout{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap"><div class="eyebrow">TIN HỌC 10 · KẾT NỐI TRI THỨC</div><h1>Python Code Lab 10</h1><p>Đọc mã lệnh · dự đoán kết quả · thử nghiệm Python trực tiếp trên trình duyệt.</p></div></header>
+<main><div class="layout">
+<aside class="panel"><h2>Danh sách bài luyện</h2><p class="muted">Chọn bài để nạp ví dụ và nhiệm vụ tương ứng.</p><div id="tasks"></div><div class="notice">Trình chạy Python dùng Pyodide từ CDN; cần kết nối Internet ở lần tải đầu tiên.</div></aside>
+<section class="panel"><div class="tag" id="level">Bài 1 · Cơ bản</div><h2 id="title" style="margin-top:12px"></h2><p id="desc" class="muted"></p><h3>Mã Python</h3><textarea id="code" class="editor" spellcheck="false"></textarea>
+<div class="controls"><button class="primary" id="run">▶ Chạy Python</button><button class="secondary" id="reset">Khôi phục mã mẫu</button><button class="secondary" id="hint">Gợi ý</button></div>
+<div id="hintbox" class="notice hidden"></div><h3>Kết quả chạy</h3><div id="output" class="output">Chưa chạy chương trình.</div><p class="muted" id="status">Sẵn sàng. Bấm “Chạy Python” để khởi tạo môi trường (có thể mất vài giây).</p>
+<div class="notice" style="margin-top:14px">Lưu ý: không nhập mật khẩu hoặc thông tin cá nhân vào trình chạy. Mã được thực thi trong trình duyệt của bạn.</div></section>
+</div></main>
+<script>
+const lessons=[
+ {title:"Bài 1 — Lệnh xuất print()",level:"Cơ bản",desc:"Nhiệm vụ: hiển thị lời chào và kết quả của phép tính 12 + 8.",code:'print("Xin chào Python!")\\nprint(12 + 8)',hint:"Dùng print(...) để hiển thị nội dung. Chuỗi ký tự đặt trong dấu nháy."},
+ {title:"Bài 2 — Biến và lệnh gán",level:"Cơ bản",desc:"Nhiệm vụ: gán giá trị cho hai biến a, b rồi in tổng của chúng.",code:"a = 7\\nb = 5\\ntong = a + b\\nprint(tong)",hint:"Dùng dấu = để gán giá trị; phép cộng hai biến viết là a + b."},
+ {title:"Bài 3 — Nhập dữ liệu",level:"Cơ bản",desc:"Nhiệm vụ: chuyển chuỗi '16' thành số nguyên rồi cộng thêm 4. Không cần nhập từ bàn phím.",code:'s = "16"\\nn = int(s)\\nprint(n + 4)',hint:"input() trả về chuỗi. Hàm int(...) chuyển chuỗi số hợp lệ thành số nguyên."},
+ {title:"Bài 4 — Câu lệnh if",level:"Thông hiểu",desc:"Nhiệm vụ: kiểm tra n = 9 là số chẵn hay lẻ bằng phép chia lấy dư %.",code:'n = 9\\nif n % 2 == 0:\\n    print("Số chẵn")\\nelse:\\n    print("Số lẻ")',hint:"Một số nguyên chẵn khi n % 2 == 0. Nhớ dấu hai chấm và thụt lề khối lệnh."},
+ {title:"Bài 5 — Vòng lặp for",level:"Thông hiểu",desc:"Nhiệm vụ: in các số từ 0 đến 4 bằng range(5).",code:"for i in range(5):\\n    print(i)",hint:"range(5) tạo các giá trị 0, 1, 2, 3, 4; số 5 không nằm trong dãy."},
+ {title:"Bài 6 — Tích lũy trong vòng lặp",level:"Vận dụng",desc:"Nhiệm vụ: tính tổng các số từ 1 đến 5.",code:"tong = 0\\nfor i in range(1, 6):\\n    tong = tong + i\\nprint(tong)",hint:"Khởi tạo tong = 0, sau đó cộng lần lượt từng giá trị i. range(1, 6) kết thúc trước 6."}
+];
+let current=0, pyodide=null, loading=false;
+const $=id=>document.getElementById(id);
+function renderTasks(){ $("tasks").innerHTML="";lessons.forEach((l,i)=>{const b=document.createElement("button");b.className="task"+(i===current?" active":"");b.textContent=l.title;b.onclick=()=>loadLesson(i);$("tasks").appendChild(b)})}
+function loadLesson(i){current=i;const l=lessons[i];$("level").textContent=`Bài ${i+1} · ${l.level}`;$("title").textContent=l.title;$("desc").textContent=l.desc;$("code").value=l.code.replaceAll("\\n","\n");$("hintbox").classList.add("hidden");$("output").textContent="Chưa chạy chương trình.";$("status").textContent="Sẵn sàng.";renderTasks()}
+function setStatus(s){$("status").textContent=s}
+async function runCode(){
+ const code=$("code").value;$("output").textContent="Đang khởi tạo Python…";$("run").disabled=true;
+ try{
+  if(!pyodide){if(loading)throw new Error("Python đang được tải. Vui lòng chờ rồi thử lại.");loading=true;setStatus("Đang tải Pyodide từ CDN; lần đầu có thể cần một lúc.");const script=document.createElement("script");script.src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js";document.head.appendChild(script);await new Promise((resolve,reject)=>{script.onload=resolve;script.onerror=()=>reject(new Error("Không tải được Pyodide. Hãy kiểm tra kết nối Internet."))});pyodide=await loadPyodide();loading=false}
+  let out="";pyodide.setStdout({batched:s=>{out+=s+"\n"}});pyodide.setStderr({batched:s=>{out+="Lỗi: "+s+"\n"}});
+  await pyodide.runPythonAsync(code);$("output").textContent=out.trimEnd()||"(Chương trình không tạo đầu ra.)";setStatus("Chạy xong. Hãy so sánh kết quả với yêu cầu của bài.");
+ }catch(e){loading=false;$("output").textContent=String(e);setStatus("Có lỗi hoặc chưa tải được môi trường Python.")}
+ finally{$("run").disabled=false}
+}
+$("run").onclick=runCode;$("reset").onclick=()=>loadLesson(current);$("hint").onclick=()=>{$("hintbox").textContent=lessons[current].hint;$("hintbox").classList.toggle("hidden")};loadLesson(0);
+</script></body></html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <title>Học tốt Python - THPT Nguyễn Bỉnh Khiêm</title>
+    <meta name="description" content="Lập trình Python trực tuyến dành cho học sinh - Giáo viên Võ Thị Thanh Thảo biên soạn." />
+    
+    <!-- PWA & Mobile Web App Meta for iOS and Android -->
+    <meta name="theme-color" content="#0d3d78" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Python 10" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <meta property="og:title" content="Học tốt Python - THPT Nguyễn Bỉnh Khiêm" />
+    <meta property="og:description" content="Lập trình Python trực tuyến dành cho học sinh - Giáo viên Võ Thị Thanh Thảo biên soạn." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Essential Inline Polyfills for Older Phones (iOS 11-14 Safari & Older Android WebView) -->
+    <script>
+      (function() {
+        // globalThis polyfill
+        if (typeof globalThis === 'undefined') {
+          if (typeof window !== 'undefined') window.globalThis = window;
+          else if (typeof self !== 'undefined') self.globalThis = self;
+          else if (typeof global !== 'undefined') global.globalThis = global;
+        }
+
+        // Object.fromEntries polyfill
+        if (!Object.fromEntries) {
+          Object.fromEntries = function(entries) {
+            if (!entries || !entries[Symbol.iterator]) { throw new TypeError('Object.fromEntries requires an iterable'); }
+            var obj = {};
+            for (var pair of entries) {
+              if (Object(pair) !== pair) { throw new TypeError('iterable for fromEntries should yield objects'); }
+              obj[pair[0]] = pair[1];
+            }
+            return obj;
+          };
+        }
+
+        // Array.prototype.flat polyfill
+        if (!Array.prototype.flat) {
+          Array.prototype.flat = function(depth) {
+            var flt = function(arr, d) {
+              return d > 0 ? arr.reduce(function(acc, val) {
+                return acc.concat(Array.isArray(val) ? flt(val, d - 1) : val);
+              }, []) : arr.slice();
+            };
+            return flt(this, depth === undefined ? 1 : Number(depth));
+          };
+        }
+
+        // Array.prototype.flatMap polyfill
+        if (!Array.prototype.flatMap) {
+          Array.prototype.flatMap = function(cb, thisArg) {
+            return this.map(cb, thisArg).flat();
+          };
+        }
+
+        // Promise.allSettled polyfill
+        if (!Promise.allSettled) {
+          Promise.allSettled = function(promises) {
+            return Promise.all(
+              Array.from(promises).map(function(p) {
+                return Promise.resolve(p).then(
+                  function(value) { return { status: 'fulfilled', value: value }; },
+                  function(reason) { return { status: 'rejected', reason: reason }; }
+                );
+              })
+            );
+          };
+        }
+      })();
+    </script>
+    <!-- Defer Pyodide loading so it never blocks page render on slow connections or older phones -->
+    <script defer src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+  </head>
+  <body class="bg-[#f6faff] text-[#17365d] antialiased">
+    <noscript>
+      <div style="padding: 20px; text-align: center; background: #fff3cd; color: #856404; font-family: sans-serif;">
+        ⚠️ Ứng dụng Học tốt Python cần bật JavaScript để chạy bài giảng và môi trường lập trình. Vui lòng bật JavaScript trong cài đặt trình duyệt của bạn.
+      </div>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

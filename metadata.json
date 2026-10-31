@@ -1,0 +1,8 @@
+{
+  "name": "Học tốt Python - THPT Nguyễn Bỉnh Khiêm-An Giang",
+  "description": "Học lập trình Python trực tuyến cho học sinh lớp 10 - Giáo viên Võ Thị Thanh Thảo biên soạn.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

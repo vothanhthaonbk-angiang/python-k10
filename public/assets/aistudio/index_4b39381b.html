@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Python Quiz Master - Tin học 10</title>
+<style>
+:root{--navy:#10213d;--blue:#2457d6;--gold:#ffbd45;--bg:#f3f6fb;--ink:#17233b;--muted:#667085;--green:#16845b;--red:#c53636}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(120deg,#10213d,#244b8f);color:white;padding:26px 18px}header .wrap,main{max-width:900px;margin:auto}
+.eyebrow{color:#ffd477;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+h1{margin:.35rem 0;font-size:clamp(1.6rem,4vw,2.5rem)}header p{margin:.4rem 0;color:#e2eaff}
+main{padding:22px 16px 44px}.panel{background:white;border:1px solid #e4e9f2;border-radius:18px;padding:22px;box-shadow:0 8px 24px #1c31540b}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.94rem}
+.progress{height:8px;background:#e9edf5;border-radius:20px;overflow:hidden;margin:14px 0 22px}.bar{height:100%;width:0;background:var(--gold);transition:width .2s}
+h2{font-size:1.25rem;line-height:1.5}.choices{display:grid;gap:10px;margin:18px 0}.choice{border:1px solid #dce3ef;background:white;border-radius:12px;padding:13px 15px;text-align:left;font-size:1rem;cursor:pointer;color:var(--ink)}.choice:hover{border-color:var(--blue);background:#f5f8ff}.choice.selected{border:2px solid var(--blue);background:#edf3ff}.choice.correct{border:2px solid var(--green);background:#ecf9f2}.choice.wrong{border:2px solid var(--red);background:#fff0f0}
+button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 18px;cursor:pointer}.primary{background:var(--blue);color:white}.secondary{background:#edf1f7;color:#25344f}.primary:disabled{opacity:.45;cursor:not-allowed}
+.feedback{padding:13px 15px;border-radius:12px;margin:12px 0;background:#f3f6fb;line-height:1.55}.feedback.good{background:#eaf8f0;color:#145b3e}.feedback.bad{background:#fff1f0;color:#8f2525}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:18px}.hidden{display:none}.score{font-size:2.3rem;font-weight:800;color:var(--blue)}.small{font-size:.9rem;color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:.85rem;padding:18px}
+</style></head>
+<body>
+<header><div class="wrap"><div class="eyebrow">TIN HỌC 10 · KẾT NỐI TRI THỨC</div><h1>Python Quiz Master</h1><p>Ôn kiến thức Python qua câu hỏi ngắn, phản hồi tức thì và tổng kết kết quả.</p></div></header>
+<main>
+<section id="quiz" class="panel">
+<div class="top"><span id="counter">Câu 1 / 10</span><span id="topic">Chủ đề: Python cơ bản</span></div>
+<div class="progress"><div id="bar" class="bar"></div></div>
+<h2 id="question"></h2><div id="choices" class="choices"></div>
+<div id="feedback" class="feedback hidden" aria-live="polite"></div>
+<div class="actions"><button class="secondary" id="restart">Làm lại từ đầu</button><button class="primary" id="next" disabled>Kiểm tra đáp án</button></div>
+<p class="small">Mỗi câu đúng được 1 điểm. Ngân hàng câu hỏi mẫu có thể chỉnh sửa trong biến <code>questions</code> ở cuối tệp index.html.</p>
+</section>
+<section id="result" class="panel hidden">
+<div class="eyebrow">KẾT QUẢ LUYỆN TẬP</div><h2>Hoàn thành lượt ôn tập!</h2><div class="score" id="score"></div><p id="summary"></p><div id="review"></div>
+<div class="actions"><button class="primary" id="again">Làm bài mới</button></div>
+</section>
+</main><footer>Ứng dụng học tập mẫu · Không thu thập dữ liệu cá nhân</footer>
+<script>
+const questions = [
+ {topic:"Biến và lệnh gán",q:"Sau khi chạy đoạn lệnh x = 5; x = x + 2, giá trị của x là gì?",a:["5","2","7","x + 2"],correct:2,why:"Lệnh gán thứ hai lấy giá trị hiện tại của x (5), cộng 2 rồi gán lại cho x."},
+ {topic:"Kiểu dữ liệu",q:"Kiểu dữ liệu của giá trị 3.14 trong Python là gì?",a:["int","float","str","bool"],correct:1,why:"Số thực như 3.14 thuộc kiểu float."},
+ {topic:"Lệnh xuất",q:"Lệnh nào thường dùng để đưa thông tin ra màn hình?",a:["input()","print()","int()","type()"],correct:1,why:"print() hiển thị dữ liệu ra màn hình."},
+ {topic:"Lệnh nhập",q:"Hàm input() trả về dữ liệu thuộc kiểu nào nếu không chuyển đổi?",a:["int","float","str","bool"],correct:2,why:"input() trả về chuỗi ký tự; muốn dùng như số cần chuyển đổi kiểu."},
+ {topic:"Điều kiện",q:"Cấu trúc nào dùng để rẽ nhánh theo điều kiện trong Python?",a:["if","for","print","import"],correct:0,why:"if kiểm tra điều kiện để lựa chọn khối lệnh thực hiện."},
+ {topic:"Toán tử so sánh",q:"Biểu thức 4 >= 4 cho kết quả nào?",a:["False","True","4","Lỗi cú pháp"],correct:1,why:">= có nghĩa là lớn hơn hoặc bằng; 4 bằng 4 nên kết quả là True."},
+ {topic:"Vòng lặp for",q:"range(3) tạo ra dãy giá trị nào khi duyệt bằng for?",a:["1, 2, 3","0, 1, 2","0, 1, 2, 3","3, 2, 1"],correct:1,why:"range(3) tạo các số nguyên 0, 1, 2; điểm kết thúc 3 không được lấy."},
+ {topic:"Vòng lặp while",q:"Vòng lặp while tiếp tục thực hiện khi nào?",a:["Điều kiện đúng","Điều kiện sai","Chương trình chưa có biến","Luôn đúng một lần"],correct:0,why:"while lặp khi biểu thức điều kiện còn True."},
+ {topic:"Toán tử số học",q:"Trong Python, 7 // 2 cho kết quả nào?",a:["3.5","1","3","4"],correct:2,why:"// là phép chia lấy phần nguyên theo quy tắc làm tròn xuống; 7 // 2 bằng 3."},
+ {topic:"Lỗi chương trình",q:"Tên biến nào dưới đây hợp lệ trong Python?",a:["2diem","diem-toan","diem_toan","class"],correct:2,why:"Tên biến có thể chứa chữ, số và dấu gạch dưới, nhưng không bắt đầu bằng số hoặc trùng từ khóa."}
+];
+let order=[], index=0, selected=null, checked=false, score=0, outcomes=[];
+const $=id=>document.getElementById(id);
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function start(){order=shuffle(questions);index=0;selected=null;checked=false;score=0;outcomes=[];$("quiz").classList.remove("hidden");$("result").classList.add("hidden");render()}
+function render(){
+ const item=order[index];selected=null;checked=false;
+ $("counter").textContent=`Câu ${index+1} / ${order.length}`;$("topic").textContent="Chủ đề: "+item.topic;
+ $("bar").style.width=`${index/order.length*100}%`;$("question").textContent=item.q;
+ $("choices").innerHTML="";item.a.forEach((txt,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=String.fromCharCode(65+i)+". "+txt;b.onclick=()=>pick(i);$("choices").appendChild(b)});
+ $("feedback").className="feedback hidden";$("feedback").textContent="";$("next").disabled=true;$("next").textContent="Kiểm tra đáp án";
+}
+function pick(i){if(checked)return;selected=i;[...$("choices").children].forEach((b,j)=>b.classList.toggle("selected",i===j));$("next").disabled=false}
+function check(){
+ const item=order[index];if(!checked){if(selected===null)return;checked=true;const ok=selected===item.correct;if(ok)score++;outcomes.push({item,selected,ok});
+ [...$("choices").children].forEach((b,j)=>{b.disabled=true;if(j===item.correct)b.classList.add("correct");else if(j===selected)b.classList.add("wrong")});
+ $("feedback").className="feedback "+(ok?"good":"bad");$("feedback").textContent=(ok?"Chính xác! ":"Chưa đúng. Đáp án đúng: "+String.fromCharCode(65+item.correct)+". ")+item.why;
+ $("next").textContent=index===order.length-1?"Xem kết quả":"Câu tiếp theo";return}
+ if(index<order.length-1){index++;render()}else showResult()
+}
+function showResult(){$("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("score").textContent=`${score} / ${order.length} điểm`;$("summary").textContent=score>=8?"Rất tốt! Hãy thử lượt khác để luyện chắc kiến thức.":score>=5?"Khá tốt. Hãy xem lại phần giải thích của các câu chưa đúng.":"Hãy ôn lại các khái niệm cơ bản rồi làm lại bài."; $("bar").style.width="100%";$("review").innerHTML="<h3>Các câu cần xem lại</h3>"+outcomes.filter(x=>!x.ok).map(x=>`<div class="feedback bad"><b>${x.item.topic}:</b> ${x.item.q}<br>Đáp án: ${String.fromCharCode(65+x.item.correct)}. ${x.item.a[x.item.correct]}<br>${x.item.why}</div>`).join("")+(outcomes.every(x=>x.ok)?"Bạn đã trả lời đúng tất cả câu hỏi.": "");}
+$("next").onclick=check;$("restart").onclick=start;$("again").onclick=start;start();
+</script></body></html>
